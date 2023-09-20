@@ -29,31 +29,34 @@ public class PostController {
 
     @GetMapping
     public PostResponse getAllPosts(
-            @RequestParam(value = "pageNo",defaultValue = AppConstants.DEFAULT_PAGE_NUMBER,required = false) int pageNo,
-            @RequestParam(value = "pageSize",defaultValue = AppConstants.DEFAULT_PAGE_SIZE,required = false) int pageSize,
-            @RequestParam(value = "sortBy",defaultValue = AppConstants.DEFAULT_SORT_BY,required = false) String sortBy,
-            @RequestParam(value = "sortDir",defaultValue = AppConstants.DEFAULT_SORT_DIRECTION,required = false) String sortDir
-    )
-    {
-        return postService.getAllPosts(pageNo,pageSize,sortBy,sortDir);
+            @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir
+    ) {
+        return postService.getAllPosts(pageNo, pageSize, sortBy, sortDir);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PostDto> getPostById(@PathVariable long id)
-    {
-        return new ResponseEntity<>(postService.getPostById(id),HttpStatus.OK);
+    public ResponseEntity<PostDto> getPostById(@PathVariable long id) {
+        return new ResponseEntity<>(postService.getPostById(id), HttpStatus.OK);
     }
+
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
-    public ResponseEntity<PostDto> updatePost(@Valid @RequestBody PostDto postDto,@PathVariable long id)
-    {
-        return  new ResponseEntity<>(postService.updatePost(postDto,id),HttpStatus.OK);
+    public ResponseEntity<PostDto> updatePost(@Valid @RequestBody PostDto postDto, @PathVariable long id) {
+        return new ResponseEntity<>(postService.updatePost(postDto, id), HttpStatus.OK);
     }
+
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deletePost(@PathVariable long id)
-    {
+    public ResponseEntity<String> deletePost(@PathVariable long id) {
         postService.deletePost(id);
-        return new ResponseEntity<>("deleted",HttpStatus.OK);
+        return new ResponseEntity<>("deleted", HttpStatus.OK);
+    }
+
+    @GetMapping("/category/{categoryId}")
+    public ResponseEntity<List<PostDto>> getPostsByCategory(@PathVariable long categoryId) {
+        return ResponseEntity.ok(postService.getPostsByCategory(categoryId));
     }
 }
